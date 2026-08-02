@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STMA Cub Scouts — Easy Site Editor</title>
+<style>
+  :root{--blue:#0c6acf;--blue-dark:#0a3d7a;--gold:#ffc72c;--ink:#1f2a37;--muted:#5b6b7c;--bg:#f4f8fd;--line:#e2eaf3}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+  header.top{background:var(--blue-dark);color:#fff;padding:18px 0}
+  .wrap{max-width:900px;margin:0 auto;padding:0 20px}
+  header.top h1{font-size:1.4rem}
+  header.top p{opacity:.9;font-size:.95rem;margin-top:2px}
+  .intro{background:#eaf2fd;border:1px solid #d4e4f7;border-radius:12px;padding:16px 18px;margin:22px 0;font-size:.95rem}
+  .intro b{color:var(--blue-dark)}
+  .tabs{display:flex;gap:10px;margin:22px 0 6px;flex-wrap:wrap}
+  .tab{background:#fff;border:1px solid var(--blue);color:var(--blue);border-radius:40px;padding:10px 20px;font-weight:700;cursor:pointer;font-size:.95rem}
+  .tab.active{background:var(--blue);color:#fff}
+  .panel{display:none}.panel.show{display:block}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 22px rgba(12,58,122,.08);padding:20px 22px;margin-bottom:20px}
+  .card h2{color:var(--blue-dark);font-size:1.1rem;margin-bottom:2px}
+  .card h2 .n{background:var(--gold);color:var(--blue-dark);border-radius:20px;padding:1px 9px;font-size:.8rem;margin-right:8px}
+  .card .sub{color:var(--muted);font-size:.88rem;margin-bottom:12px}
+  label{display:block;font-weight:600;color:var(--blue-dark);font-size:.85rem;margin:11px 0 4px}
+  label span{font-weight:400;color:var(--muted)}
+  input,textarea{width:100%;border:1px solid #c7d6e8;border-radius:9px;padding:9px 11px;font-size:.98rem;font-family:inherit;color:var(--ink)}
+  input:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(12,106,207,.15)}
+  textarea{min-height:64px;resize:vertical}
+  .row{display:flex;gap:14px;flex-wrap:wrap}.row>div{flex:1;min-width:170px}
+  .btn{display:inline-block;background:var(--blue);color:#fff;font-weight:700;border:none;border-radius:40px;padding:13px 26px;font-size:1rem;cursor:pointer;margin-top:8px}
+  .btn:hover{background:#0a5ab3}.btn.ghost{background:#fff;color:var(--blue);border:1px solid var(--blue)}
+  .bigbtn{position:sticky;bottom:0;background:var(--bg);padding:14px 0;border-top:1px solid var(--line);text-align:center;z-index:5}
+  .out{margin-top:16px;display:none}.out.show{display:block}
+  .snippet{width:100%;min-height:120px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.78rem;background:#0f2138;color:#d6e6ff;border:none;border-radius:10px;padding:14px;white-space:pre;overflow:auto}
+  .step{background:#fff9e6;border:1px solid #ffe08a;border-radius:10px;padding:12px 14px;font-size:.9rem;margin-top:14px}.step b{color:#8a6d00}
+  .divh{font-weight:700;color:var(--blue-dark);margin:14px 0 -2px;font-size:.95rem;border-top:1px dashed #d4e4f7;padding-top:12px}
+  ol{margin:6px 0 0 20px}ol li{margin-bottom:4px}
+  footer{text-align:center;color:var(--muted);font-size:.85rem;padding:24px}
+  .savebar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:0 0 14px}
+  .autosave{color:#2f8f5b;font-size:.9rem;font-weight:700}
+  .savebtns{display:flex;gap:8px;flex-wrap:wrap}
+  .mini{background:#eef4fb;border:1px solid #c7d6e8;color:var(--blue-dark);border-radius:8px;padding:8px 12px;font-size:.85rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center}
+  .mini:hover{background:#dce9f7}
+  .mini.danger{background:#fdeceb;border-color:#f3c2bf;color:#b3261e}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <h1>🐾 STMA Cub Scouts — Easy Site Editor</h1>
+    <p>Edit every part of your site with simple boxes. No coding. The FAQ is kept as-is automatically.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="intro">
+    <b>How it works:</b> Change any box below, click the big button at the bottom, and it downloads a finished file. Then upload that file to your GitHub repo (<b>Add file → Upload files → Commit</b>) and your live site updates in about a minute. For images, type the file name exactly as it appears in your <b>images</b> folder. <b>Your entries are saved automatically</b> — close this and reopen it later and everything you typed will still be here. Use <b>Back up my content</b> if you ever want to move it to another computer.
+  </div>
+
+  <div class="savebar">
+    <span class="autosave">✓ Your changes save automatically on this computer</span>
+    <div class="savebtns">
+      <button class="mini" onclick="saveFile()">⬇ Back up my content</button>
+      <button class="mini" onclick="document.getElementById('loadInput').click()">⬆ Restore a backup</button>
+      <input type="file" id="loadInput" accept="application/json,.json" onchange="loadFile(this)" style="display:none">
+      <button class="mini danger" onclick="resetForm()">↺ Reset to defaults</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('home',this)">Edit the Home Page</button>
+    <button class="tab" onclick="showTab('pack',this)">Add / Edit a Group Page</button>
+  </div>
+
+  <!-- ============ HOME PAGE PANEL ============ -->
+  <div class="panel show" id="home">
+
+    <div class="card">
+      <h2><span class="n">1</span>Header &amp; Join button</h2>
+      <p class="sub">The top bar: your logo, site name, and the yellow Join button.</p>
+      <div class="row">
+        <div><label>Site name (in the header)</label><input id="site_name" value="STMA Cub Scouts"></div>
+        <div><label>Header logo image <span>(in images folder)</span></label><input id="logo_img" value="Cub-Scout-Logo-on-yelliow.png"></div>
+      </div>
+      <label>Join button link <span>(where the Join button goes)</span></label>
+      <input id="join_url" value="https://beascout.scouting.org/list/?zip=55376&program%5B%5D=pack&program%5B%5D=scoutsBSA&program%5B%5D=crew">
+    </div>
+
+    <div class="card">
+      <h2><span class="n">2</span>Top banner (hero)</h2>
+      <label>Main headline</label>
+      <input id="h_head" value="Discover Adventure with Cub Scouts">
+      <label>Tagline (under the headline)</label>
+      <textarea id="h_tag">Fun, friendship, and lifelong skills for boys and girls in grades K–5. STMA Cub Scouts connects the groups across our community — find yours and start the adventure!</textarea>
+      <label>Button text</label>
+      <input id="h_btn" value="Find Your Local Cub Scout Group">
+      <label>Background photo <span>(in images folder)</span></label>
+      <input id="h_bg" value="Cub_Scouting_1920x1080 (1).png">
+    </div>
+
+    <div class="card">
+      <h2><span class="n">3</span>Welcome section</h2>
+      <label>Heading</label>
+      <input id="w_head" value="Welcome, Families!">
+      <label>Paragraph</label>
+      <textarea id="w_text">Remember the look on your child's face the first time they felt truly brave? At STMA Cub Scouts, we help them find that feeling again and again. Kids from kindergarten through 5th grade trade a little screen time for starlit campfires, muddy adventures, and the quiet pride of building something all their own. Along the way they make real friends, grow their confidence, and discover just how capable they already are. No experience needed, and you are never doing this alone. Your whole family is welcome here, and we will be right beside you for every step, every badge, and every big proud smile.</textarea>
+      <label>Carousel photos <span>(comma separated — a slideshow of these plays here)</span></label>
+      <textarea id="w_imgs">AT4A2927-edited-photo-CSBC-small_compressed.webp, Pack3547-group-photo.jpg, pack767-group-photo.jpg, IMG_0717_compressed.webp, IMG_9846_compressed.webp</textarea>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">4</span>Your Local Cub Scout Groups</h2>
+      <p class="sub">Each group's photo, description, meeting time, location, leader and contact — all in one card. Leave a photo blank to show a colored bar instead.</p>
+      <label>Section heading</label>
+      <input id="g_head" value="Your Local Cub Scout Groups">
+      <label>Intro line</label>
+      <textarea id="g_lead">Pick the group that best fits your family — see when and where they meet, who to contact, and how to register. New families are always welcome!</textarea>
+
+      <div class="divh">Group 1</div>
+      <div class="row">
+        <div><label>Location tag</label><input id="g1_tag" value="STMA (Fieldstone Elementary)"></div>
+        <div><label>Group name</label><input id="g1_name" value="Cub Scout Pack 3547"></div>
+      </div>
+      <label>Short description</label>
+      <textarea id="g1_desc">A friendly, active pack with camping, STEM, Pinewood Derby, and so many more activities.</textarea>
+      <label>Photo <span>(optional)</span></label><input id="g1_img" value="Pack3547-group-photo.jpg">
+      <div class="row">
+        <div><label>When</label><input id="g1_when" value="1st &amp; 3rd Tuesday, 6–8 pm (twice a month)"></div>
+        <div><label>Where</label><input id="g1_where" value="Fieldstone Elementary Cafeteria"></div>
+      </div>
+      <div class="row">
+        <div><label>Leader</label><input id="g1_leader" value="Brian Smith"></div>
+        <div><label>Contact email</label><input id="g1_email" value="admin@cubscouts3547.com"></div>
+      </div>
+      <div class="row">
+        <div><label>Phone</label><input id="g1_phone" value="(814)590-7543"></div>
+        <div><label>Group page link</label><input id="g1_page" value="https://cubscouts3547.com/"></div>
+      </div>
+      <label>Register link</label>
+      <input id="g1_reg" value="https://my.scouting.org/online-registration/74aa267a-3d31-4be4-9f0d-094330fc7632/applicant-type">
+
+      <div class="divh">Group 2</div>
+      <div class="row">
+        <div><label>Location tag</label><input id="g2_tag" value="STMA (St. Michael Elementary School)"></div>
+        <div><label>Group name</label><input id="g2_name" value="Cub Scout Pack 3767"></div>
+      </div>
+      <label>Short description</label>
+      <textarea id="g2_desc">A welcoming St. Michael pack with a full calendar of outdoor adventures, STEM, and family fun.</textarea>
+      <label>Photo <span>(optional)</span></label><input id="g2_img" value="pack767-group-photo.jpg">
+      <div class="row">
+        <div><label>When</label><input id="g2_when" value="Tuesday evenings at 6:30 pm"></div>
+        <div><label>Where</label><input id="g2_where" value="St. Michael Elementary School"></div>
+      </div>
+      <div class="row">
+        <div><label>Leader</label><input id="g2_leader" value="Christopher Van Keulen"></div>
+        <div><label>Contact email</label><input id="g2_email" value="pack767stma@gmail.com"></div>
+      </div>
+      <div class="row">
+        <div><label>Phone</label><input id="g2_phone" value="[phone]"></div>
+        <div><label>Group page link</label><input id="g2_page" value="https://www.pack767.org/home"></div>
+      </div>
+      <label>Register link</label>
+      <input id="g2_reg" value="https://my.scouting.org/online-registration/0dd43926-5db9-4ddc-8b39-870bd6b9c960/applicant-type">
+    </div>
+
+    <div class="card">
+      <h2><span class="n">5</span>Adventure Awaits (3 tiles)</h2>
+      <label>Heading</label>
+      <input id="a_head" value="Adventure Awaits">
+      <label>Intro line</label>
+      <textarea id="a_lead">Cub Scouting mixes outdoor fun, hands-on STEM, and real life skills, all designed for the whole family.</textarea>
+      <div class="row">
+        <div>
+          <div class="divh">Tile 1</div>
+          <label>Photo</label><input id="a1_img" value="gmf_Climbing-Activity_800x640 (1).jpg">
+          <label>Title</label><input id="a1_title" value="Outdoor Skills">
+          <label>List <span>(comma separated)</span></label><input id="a1_list" value="Camping, Hiking - Archery, Outdoor Games">
+        </div>
+        <div>
+          <div class="divh">Tile 2</div>
+          <label>Photo</label><input id="a2_img" value="cheerful-multicultural-kids-smiling-while-lyin_compressed.webp">
+          <label>Title</label><input id="a2_title" value="STEM Activities">
+          <label>List <span>(comma separated)</span></label><input id="a2_list" value="Robotics, Science experiments, Engineering projects">
+        </div>
+        <div>
+          <div class="divh">Tile 3</div>
+          <label>Photo</label><input id="a3_img" value="Parents-New-to-Scouting-600-600-p-L-97 (1)_compressed.webp">
+          <label>Title</label><input id="a3_title" value="Life Skills">
+          <label>List <span>(comma separated)</span></label><input id="a3_list" value="Leadership, Character building, Teamwork">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">6</span>Safety band</h2>
+      <label>Heading</label>
+      <input id="s_head" value="Your Child's Safety is Our #1 Priority">
+      <label>Text</label>
+      <textarea id="s_text">Cub Scouts has the most comprehensive youth protection policies of any youth organization, ensuring safe, positive experiences for every child.</textarea>
+      <div class="row">
+        <div><label>Button text</label><input id="s_btn" value="Adventure Awaits"></div>
+        <div><label>Button link</label><input id="s_link" value="https://beascout.scouting.org/list/?zip=55376&program%5B%5D=pack&program%5B%5D=scoutsBSA&program%5B%5D=crew"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">7</span>Life in the Pack (photo strip)</h2>
+      <label>Heading</label>
+      <input id="p_head" value="Life in the Pack">
+      <label>Intro line</label>
+      <textarea id="p_lead">Campouts, derbies, service projects, and a whole lot of fun, here's what adventure looks like.</textarea>
+      <div class="row">
+        <div><label>Photo 1</label><input id="p1" value="gmf_Archery-Activity_800x640 (1).jpg"></div>
+        <div><label>Photo 2</label><input id="p2" value="IMG_0717_compressed.webp"></div>
+      </div>
+      <div class="row">
+        <div><label>Photo 3</label><input id="p3" value="gmf_BouncePillow-Activity_800x640 (1).jpg"></div>
+        <div><label>Photo 4</label><input id="p4" value="IMG_9846_compressed.webp"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">8</span>Footer</h2>
+      <label>Footer blurb</label>
+      <textarea id="f_text">Serving the St. Michael–Albertville community. Fun, friendship, and lifelong skills for boys and girls K–5.</textarea>
+    </div>
+
+    <div class="bigbtn">
+      <button class="btn" onclick="buildHome()">Build the home page ⬇</button>
+    </div>
+
+    <div class="out" id="homeOut">
+      <div class="step">
+        <b>Now do this:</b>
+        <ol>
+          <li>The file <b>index.html</b> just downloaded.</li>
+          <li>In your GitHub repo click <b>Add file → Upload files</b>, drag it in, and <b>Commit changes</b> (it replaces the old home page).</li>
+          <li>Wait ~1 minute, then hard-refresh your site (Cmd+Shift+R / Ctrl+Shift+R).</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PACK PAGE PANEL ============ -->
+  <div class="panel" id="pack">
+    <div class="card">
+      <h2>Add or update a group page</h2>
+      <p class="sub">Builds a complete group page (matching your site's style) plus the card code for the home page.</p>
+      <div class="row">
+        <div><label>Group number <span>(e.g. 3547)</span></label><input id="num" placeholder="3547"></div>
+        <div><label>Town / area</label><input id="town" placeholder="Albertville"></div>
+      </div>
+      <label>Meeting location</label><input id="loc" placeholder="Fieldstone Elementary Cafeteria">
+      <label>Meeting time</label><input id="time" placeholder="1st Tuesday at 6:30pm — twice a month">
+      <label>One-line intro</label><input id="tagline" placeholder="A friendly, active pack with camping and STEM fun.">
+      <label>About — paragraph 1</label><textarea id="ap1" placeholder="Who you are and what your group is like."></textarea>
+      <label>About — paragraph 2 <span>(optional)</span></label><textarea id="ap2"></textarea>
+      <label>About — paragraph 3 <span>(optional)</span></label><textarea id="ap3"></textarea>
+      <div class="row">
+        <div><label>Registration link</label><input id="reg" placeholder="https://my.scouting.org/online-registration/..."></div>
+        <div><label>Contact email</label><input id="email" placeholder="info@stmacubscouts.com"></div>
+      </div>
+      <button class="btn" onclick="buildPack()">Build the group page ⬇</button>
+      <div class="out" id="packOut">
+        <div class="step"><b>Now do this:</b>
+          <ol>
+            <li>The file <b id="fname">pack-XXXX.html</b> downloaded.</li>
+            <li>Upload it to your repo (<b>Add file → Upload files → Commit</b>).</li>
+            <li>Copy the card code below into <b>index.html</b> in the "Your Local Cub Scout Groups" area.</li>
+          </ol>
+        </div>
+        <label>Home-page card code</label>
+        <textarea class="snippet" id="cardCode" readonly onclick="this.select()"></textarea>
+        <button class="btn ghost" onclick="copyCard()">Copy card code</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>Made for STMA Cub Scouts • Keep this file handy for whenever you update the site.</footer>
+
+<script>
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function v(id){var e=document.getElementById(id);return e?e.value.trim():'';}
+function showTab(id,btn){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('show');});
+  document.getElementById(id).classList.add('show');
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+}
+function download(name,text){
+  var blob=new Blob([text],{type:'text/html'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();
+}
+function listItems(csv){return csv.split(',').map(function(s){return s.trim();}).filter(Boolean).map(function(s){return '<li>'+esc(s)+'</li>';}).join('');}
+function csvList(csv){return csv.split(',').map(function(s){return s.trim();}).filter(Boolean);}
+
+var PAGEJS='\n<script>\n'+
+'function toggleNav(){document.querySelector(".nav").classList.toggle("open");}\n'+
+'function cxMove(id,dir){var cx=document.getElementById(id);if(cx&&cx._go)cx._go(cx._i+dir);}\n'+
+'document.querySelectorAll(".carousel").forEach(function(cx){\n'+
+'  var slides=cx.querySelector(".slides"),imgs=slides.querySelectorAll("img"),dots=cx.querySelector(".dots"),n=imgs.length;\n'+
+'  cx._i=0;\n'+
+'  for(var k=0;k<n;k++){(function(k){var b=document.createElement("button");if(k===0)b.className="active";b.onclick=function(){cx._go(k);};dots.appendChild(b);})(k);}\n'+
+'  cx._go=function(t){cx._i=(t+n)%n;slides.style.transform="translateX(-"+(cx._i*100)+"%)";var db=dots.querySelectorAll("button");for(var j=0;j<db.length;j++)db[j].className=(j===cx._i?"active":"");};\n'+
+'  var timer=setInterval(function(){cx._go(cx._i+1);},4500);\n'+
+'  cx.addEventListener("mouseenter",function(){clearInterval(timer);});\n'+
+'  cx.addEventListener("mouseleave",function(){timer=setInterval(function(){cx._go(cx._i+1);},4500);});\n'+
+'});\n<\/script>\n';
+var PACKJS='\n<script>function toggleNav(){document.querySelector(".nav").classList.toggle("open");}<\/script>\n';
+
+function groupCard(p){
+  var img=v(p+'_img') ? '        <img class="cardimg" src="images/'+v(p+'_img')+'" alt="'+esc(v(p+'_name'))+'">\n' : '        <div class="top"></div>\n';
+  var meta='';
+  if(v(p+'_when')) meta+='            <strong>When:</strong> '+esc(v(p+'_when'))+'<br>\n';
+  if(v(p+'_where')) meta+='            <strong>Where:</strong> '+esc(v(p+'_where'))+'<br>\n';
+  if(v(p+'_leader')) meta+='            <strong>Leader:</strong> '+esc(v(p+'_leader'))+'<br>\n';
+  if(v(p+'_email')||v(p+'_phone')){
+    meta+='            <strong>Contact:</strong> ';
+    if(v(p+'_email')) meta+='<a href="mailto:'+esc(v(p+'_email'))+'">'+esc(v(p+'_email'))+'</a>';
+    if(v(p+'_email')&&v(p+'_phone')) meta+=' &middot; ';
+    if(v(p+'_phone')) meta+=esc(v(p+'_phone'));
+    meta+='\n';
+  }
+  var metaBlock = meta ? '          <p class="meta">\n'+meta+'          </p>\n' : '';
+  var links='';
+  if(v(p+'_page')&&v(p+'_page')!=='#') links+='            <a href="'+esc(v(p+'_page'))+'">Group page &rarr;</a>\n';
+  if(v(p+'_reg')&&v(p+'_reg')!=='#') links+='            <a href="'+esc(v(p+'_reg'))+'" target="_blank" rel="noopener">Register &rarr;</a>\n';
+  return '\n      <div class="card">\n'+img+'        <div class="body">\n'+
+    '          <span class="tag">'+esc(v(p+'_tag'))+'</span>\n          <h3>'+esc(v(p+'_name'))+'</h3>\n'+
+    '          <p>'+esc(v(p+'_desc'))+'</p>\n'+metaBlock+'          <div class="links">\n'+links+'          </div>\n        </div>\n      </div>\n';
+}
+
+function buildHome(){
+  var feat=function(img,title,csv){
+    return '\n      <div class="feature">\n        <img class="featimg" src="images/'+img+'" alt="'+esc(title)+'">\n        <div class="fbody">\n'+
+    '          <h3>'+esc(title)+'</h3>\n          <ul>'+listItems(csv)+'</ul>\n        </div>\n      </div>\n';
+  };
+  var join=esc(v('join_url'));
+  var cimgs=csvList(v('w_imgs')); if(!cimgs.length) cimgs=['AT4A2927-edited-photo-CSBC-small_compressed.webp'];
+  var carousel='    <div class="carousel" id="welcomeCarousel">\n      <div class="slides">\n'+
+    cimgs.map(function(f){return '        <img src="images/'+f+'" alt="'+esc(v('site_name'))+'">';}).join('\n')+'\n      </div>\n'+
+    '      <button class="arrow prev" aria-label="Previous photo" onclick="cxMove(\'welcomeCarousel\',-1)">&lsaquo;</button>\n'+
+    '      <button class="arrow next" aria-label="Next photo" onclick="cxMove(\'welcomeCarousel\',1)">&rsaquo;</button>\n'+
+    '      <div class="dots"></div>\n    </div>\n';
+  var FAQ='\n<!-- ===== FAQ (not editable) ===== -->\n<section id="faq">\n  <div class="wrap">\n    <h2>Frequently Asked Questions</h2>\n'+
+  '    <p class="lead">Can\'t find an answer? Reach out using the contact details above and we\'ll get back to you.</p>\n    <div class="faq">\n'+
+  '      <details open><summary>Will my children be safe?</summary><div class="ans">Scouting has the most comprehensive youth protection policies of any youth organization. Safety is the organization\'s #1 priority.</div></details>\n'+
+  '      <details><summary>Is Scouting still relevant for modern families?</summary><div class="ans">Yes &mdash; Scouting builds respect for others, character, fitness, and leadership. It prepares children for life.</div></details>\n'+
+  '      <details><summary>What kinds of activities do Cub Scouts do?</summary><div class="ans">Outdoor activities like camping, hiking, and archery; STEM activities including robotics and hands-on learning; family-oriented adventures; and crafts, Pinewood Derby races, and other fun projects.</div></details>\n'+
+  '      <details><summary>Can girls join?</summary><div class="ans">Yes &mdash; Cub Scouting is open to both boys and girls. It\'s designed for the whole family.</div></details>\n'+
+  '      <details><summary>Do we need prior experience?</summary><div class="ans">No prior knowledge is required &mdash; the program helps new families get started easily.</div></details>\n'+
+  '      <details><summary>What about the costs?</summary><div class="ans">Scouting is competitively priced compared to other youth organizations, and there are ways to make the program affordable for families who need assistance. No youth is turned away due to a family\'s inability to pay.</div></details>\n'+
+  '      <details><summary>Are parents involved?</summary><div class="ans">Yes! Cub Scouting is fun for the whole family. There is a place for every parent, guardian, or caring adult who wants to help.</div></details>\n    </div>\n  </div>\n</section>\n';
+
+  var html='<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n'+
+  '<title>'+esc(v('site_name'))+'</title>\n<meta name="description" content="'+esc(v('site_name'))+' &mdash; fun, friendship, and lifelong skills for boys and girls K-5.">\n'+
+  '<meta name="theme-color" content="#0c6acf">\n<link rel="stylesheet" href="styles.css">\n</head>\n<body>\n\n'+
+  '<header class="site">\n  <div class="wrap nav">\n    <a class="brand" href="index.html">\n'+
+  '      <img class="logo" src="images/'+v('logo_img')+'" alt="'+esc(v('site_name'))+' logo">\n      <span>'+esc(v('site_name'))+'</span>\n    </a>\n'+
+  '    <button class="navtoggle" aria-label="Menu" onclick="toggleNav()"><span></span><span></span><span></span></button>\n'+
+  '    <nav>\n      <ul>\n        <li><a href="#packs">Local Groups</a></li>\n        <li><a href="#why">Why Cub Scouts</a></li>\n'+
+  '        <li><a href="#faq">FAQ</a></li>\n        <li><a href="#packs">Contact</a></li>\n'+
+  '        <li><a class="btn" href="'+join+'" target="_blank" rel="noopener">Join</a></li>\n      </ul>\n    </nav>\n  </div>\n</header>\n\n'+
+
+  '<section class="hero has-photo" style="padding:0;background:linear-gradient(135deg,rgba(10,61,122,.88),rgba(12,106,207,.72)),url(\'images/'+v('h_bg')+'\') center/cover">\n  <div class="wrap">\n'+
+  '    <h1>'+esc(v('h_head'))+'</h1>\n    <p class="tag">'+esc(v('h_tag'))+'</p>\n'+
+  '    <div class="cta">\n      <a class="btn lg" href="#packs">'+esc(v('h_btn'))+'</a>\n    </div>\n  </div>\n</section>\n\n'+
+
+  '<section>\n  <div class="wrap">\n    <h2>'+esc(v('w_head'))+'</h2>\n    <p class="lead">'+esc(v('w_text'))+'</p>\n'+
+  carousel+'  </div>\n</section>\n\n'+
+
+  '<section id="packs" class="alt">\n  <div class="wrap">\n    <h2>'+esc(v('g_head'))+'</h2>\n    <p class="lead">'+esc(v('g_lead'))+'</p>\n    <div class="grid">\n'+
+  groupCard('g1')+groupCard('g2')+'    </div>\n  </div>\n</section>\n\n'+
+
+  '<section id="why">\n  <div class="wrap">\n    <h2>'+esc(v('a_head'))+'</h2>\n    <p class="lead">'+esc(v('a_lead'))+'</p>\n    <div class="grid">\n'+
+  feat(v('a1_img'),v('a1_title'),v('a1_list'))+feat(v('a2_img'),v('a2_title'),v('a2_list'))+feat(v('a3_img'),v('a3_title'),v('a3_list'))+
+  '    </div>\n  </div>\n</section>\n\n'+
+
+  '<section class="band">\n  <div class="wrap">\n    <h2>'+esc(v('s_head'))+'</h2>\n    <p class="lead">'+esc(v('s_text'))+'</p>\n'+
+  '    <a class="btn lg blue" href="'+esc(v('s_link'))+'" target="_blank" rel="noopener">'+esc(v('s_btn'))+'</a>\n  </div>\n</section>\n\n'+
+
+  '<section>\n  <div class="wrap">\n    <h2>'+esc(v('p_head'))+'</h2>\n    <p class="lead">'+esc(v('p_lead'))+'</p>\n    <div class="strip-photos">\n'+
+  '      <img src="images/'+v('p1')+'" alt="Pack photo">\n      <img src="images/'+v('p2')+'" alt="Pack photo">\n'+
+  '      <img src="images/'+v('p3')+'" alt="Pack photo">\n      <img src="images/'+v('p4')+'" alt="Pack photo">\n    </div>\n  </div>\n</section>\n'+
+
+  FAQ+'\n'+
+
+  '<footer class="site">\n  <div class="wrap">\n    <div class="cols">\n      <div>\n        <strong style="color:#fff;font-size:1.1rem">'+esc(v('site_name'))+'</strong>\n'+
+  '        <p style="margin-top:6px;max-width:320px">'+esc(v('f_text'))+'</p>\n      </div>\n'+
+  '      <div>\n        <p><a href="#packs">Local Groups</a></p>\n        <p><a href="#faq">FAQ</a></p>\n'+
+  '        <p><a href="'+join+'" target="_blank" rel="noopener">Join Cub Scouts</a></p>\n      </div>\n    </div>\n'+
+  '    <div class="fine">&copy; 2026 '+esc(v('site_name'))+' &bull; stmacubscouts.com &mdash; All rights reserved.</div>\n  </div>\n</footer>\n'+PAGEJS+'\n</body>\n</html>\n';
+
+  download('index.html',html);
+  document.getElementById('homeOut').classList.add('show');
+}
+
+function buildPack(){
+  var num=v('num')||'XXXX', town=v('town')||'Your Town', loc=v('loc')||'Meeting location',
+      time=v('time')||'Meeting time', tag=v('tagline')||'A welcoming Cub Scout group for the whole family.',
+      reg=v('reg')||'https://my.scouting.org/online-registration', email=v('email')||'info@stmacubscouts.com';
+  var paras='';[v('ap1'),v('ap2'),v('ap3')].forEach(function(p){ if(p) paras+='    <p>'+esc(p)+'</p>\n'; });
+  if(!paras) paras='    <p>Tell families about your group here.</p>\n';
+  var html='<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n'+
+  '<title>Pack '+esc(num)+' — STMA Cub Scouts</title>\n<meta name="theme-color" content="#0c6acf">\n<link rel="stylesheet" href="styles.css">\n</head>\n<body>\n\n'+
+  '<header class="site">\n  <div class="wrap nav">\n    <a class="brand" href="index.html">\n'+
+  '      <img class="logo" src="images/'+ (v('logo_img')||'Cub-Scout-Logo-on-yelliow.png') +'" alt="STMA Cub Scouts logo">\n      <span>STMA Cub Scouts</span>\n    </a>\n'+
+  '    <button class="navtoggle" aria-label="Menu" onclick="toggleNav()"><span></span><span></span><span></span></button>\n'+
+  '    <nav>\n      <ul>\n        <li><a href="index.html#packs">All Groups</a></li>\n        <li><a href="#about">About</a></li>\n'+
+  '        <li><a class="btn" href="'+esc(reg)+'" target="_blank" rel="noopener">Join</a></li>\n      </ul>\n    </nav>\n  </div>\n</header>\n\n'+
+  '<div class="packhead">\n  <div class="wrap">\n    <span class="pill">'+esc(town)+' &bull; '+esc(loc)+'</span>\n    <h1>Cub Scout Pack '+esc(num)+'</h1>\n'+
+  '    <p class="tag" style="max-width:640px;margin:12px auto 0;opacity:.96">'+esc(tag)+'</p>\n    <a class="back" href="index.html#packs">&larr; Back to all STMA groups</a>\n  </div>\n</div>\n\n'+
+  '<section id="meet" class="alt" style="padding:40px 0">\n  <div class="wrap">\n    <div class="info" style="justify-content:center">\n'+
+  '      <div class="box" style="background:#eaf2fd;border-color:#d4e4f7;color:var(--ink)"><strong style="color:var(--blue-dark)">When We Meet</strong>'+esc(time)+'</div>\n'+
+  '      <div class="box" style="background:#eaf2fd;border-color:#d4e4f7;color:var(--ink)"><strong style="color:var(--blue-dark)">Where</strong>'+esc(loc)+'</div>\n'+
+  '      <div class="box" style="background:#eaf2fd;border-color:#d4e4f7;color:var(--ink)"><strong style="color:var(--blue-dark)">Who</strong>Boys &amp; girls, grades K-5</div>\n    </div>\n'+
+  '    <div style="text-align:center;margin-top:24px">\n      <a class="btn lg" href="'+esc(reg)+'" target="_blank" rel="noopener">Join Pack '+esc(num)+' Today</a>\n    </div>\n  </div>\n</section>\n\n'+
+  '<section id="about">\n  <div class="wrap prose">\n    <h2>About Pack '+esc(num)+'</h2>\n'+paras+'  </div>\n</section>\n\n'+
+  '<section class="band">\n  <div class="wrap">\n    <h2>Have a Question?</h2>\n    <p class="lead">See us in person at a meeting, or send us a note. All are welcome!</p>\n'+
+  '    <div class="info">\n      <div class="box"><strong>Email Us</strong><a href="mailto:'+esc(email)+'" style="color:#fff;text-decoration:underline">'+esc(email)+'</a></div>\n'+
+  '      <div class="box"><strong>Ready to Join?</strong><a class="btn" style="margin-top:8px" href="'+esc(reg)+'" target="_blank" rel="noopener">Register Now</a></div>\n    </div>\n  </div>\n</section>\n\n'+
+  '<footer class="site">\n  <div class="wrap">\n    <div class="cols">\n      <div>\n        <strong style="color:#fff;font-size:1.1rem">Cub Scout Pack '+esc(num)+'</strong>\n'+
+  '        <p style="margin-top:6px;max-width:320px">Part of STMA Cub Scouts. Meeting in '+esc(town)+'.</p>\n      </div>\n'+
+  '      <div>\n        <p><a href="index.html#packs">All STMA Groups</a></p>\n        <p><a href="mailto:'+esc(email)+'">'+esc(email)+'</a></p>\n'+
+  '        <p><a href="'+esc(reg)+'" target="_blank" rel="noopener">Join Pack '+esc(num)+'</a></p>\n      </div>\n    </div>\n'+
+  '    <div class="fine">&copy; 2026 STMA Cub Scouts &bull; Pack '+esc(num)+'</div>\n  </div>\n</footer>\n'+PACKJS+'\n</body>\n</html>\n';
+
+  var fileName='pack-'+num+'.html';
+  download(fileName,html);
+  var card='      <div class="card">\n        <div class="top"></div>\n        <div class="body">\n          <span class="tag">'+esc(town)+'</span>\n          <h3>Pack '+esc(num)+'</h3>\n'+
+  '          <p>'+esc(tag)+'</p>\n          <div class="links">\n            <a href="'+fileName+'">Group page &rarr;</a>\n            <a href="'+esc(reg)+'" target="_blank" rel="noopener">Register &rarr;</a>\n          </div>\n        </div>\n      </div>';
+  document.getElementById('fname').textContent=fileName;
+  document.getElementById('cardCode').value=card;
+  document.getElementById('packOut').classList.add('show');
+}
+function copyCard(){var t=document.getElementById('cardCode');t.select();document.execCommand('copy');alert('Card code copied!');}
+
+/* ===== Auto-save & restore (so you never start over) ===== */
+var STORE='stma_editor_v1';
+function fields(){return document.querySelectorAll('#home input[id], #home textarea[id], #pack input[id], #pack textarea[id]');}
+function gather(){var o={};fields().forEach(function(el){o[el.id]=el.value;});return o;}
+function apply(o){fields().forEach(function(el){if(o&&Object.prototype.hasOwnProperty.call(o,el.id))el.value=o[el.id];});}
+function saveState(){try{localStorage.setItem(STORE,JSON.stringify(gather()));}catch(e){}}
+function loadState(){try{var s=localStorage.getItem(STORE);if(s)apply(JSON.parse(s));}catch(e){}}
+fields().forEach(function(el){el.addEventListener('input',saveState);});
+loadState();
+function saveFile(){
+  var blob=new Blob([JSON.stringify(gather(),null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='stma-site-content.json';a.click();
+}
+function loadFile(input){
+  var f=input.files[0];if(!f)return;var r=new FileReader();
+  r.onload=function(){try{apply(JSON.parse(r.result));saveState();alert('Your saved content was loaded back in.');}catch(e){alert('Sorry, that file could not be read.');}};
+  r.readAsText(f);input.value='';
+}
+function resetForm(){if(confirm('Reset every field back to the original defaults? This clears your current entries.')){try{localStorage.removeItem(STORE);}catch(e){}location.reload();}}
+</script>
+</body>
+</html>
