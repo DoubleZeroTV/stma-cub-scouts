@@ -138,15 +138,56 @@ footer.site .fine{margin-top:20px;padding-top:16px;border-top:1px solid rgba(255
 .card .rankimg{width:100%;height:170px;object-fit:cover;display:block;border-bottom:1px solid var(--line);background:#eef4fb}
 
 /* Logo image in the nav / pack header */
-.brand img.logo{height:42px;width:auto;display:block}
-.packhead img.logo{height:74px;width:auto;margin:0 auto 10px;display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))}
+.brand img.logo{height:44px;width:auto;display:block;border-radius:8px}
+.packhead img.logo{height:74px;width:auto;margin:0 auto 10px;display:block;border-radius:10px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))}
+
+/* Blue text on the gold Join button in the nav (white was hard to read) */
+.nav ul a.btn{color:var(--blue-dark)}
+
+/* Meeting/contact details inside a group card */
+.card .meta{font-size:.94rem;color:var(--muted);margin:2px 0 14px;line-height:1.55}
+.card .meta strong{color:var(--blue-dark)}
 
 /* two/three-up photo strip */
 .strip-photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:8px}
 .strip-photos img{width:100%;height:220px;object-fit:cover;border-radius:var(--radius);box-shadow:var(--shadow)}
 
+/* ===== Picture carousel ===== */
+.carousel{position:relative;max-width:660px;margin:10px auto 0;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:#dce9f7}
+.carousel .slides{display:flex;transition:transform .5s ease}
+.carousel .slides img{min-width:100%;width:100%;height:400px;object-fit:cover;display:block}
+.carousel .arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(10,61,122,.55);color:#fff;border:none;width:42px;height:42px;border-radius:50%;font-size:1.5rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.carousel .arrow:hover{background:rgba(10,61,122,.8)}
+.carousel .prev{left:10px}
+.carousel .next{right:10px}
+.carousel .dots{position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:8px}
+.carousel .dots button{width:11px;height:11px;border-radius:50%;border:none;background:rgba(255,255,255,.55);cursor:pointer;padding:0}
+.carousel .dots button.active{background:#fff}
+
+/* ===== Mobile hamburger menu ===== */
+.navtoggle{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px}
+.navtoggle span{display:block;width:26px;height:3px;background:#fff;border-radius:2px;transition:.25s}
+.nav.open .navtoggle span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+.nav.open .navtoggle span:nth-child(2){opacity:0}
+.nav.open .navtoggle span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+
+@media(max-width:760px){
+  .navtoggle{display:flex}
+  .nav{flex-wrap:wrap}
+  .nav nav{width:100%;order:3}
+  .nav ul{display:none;flex-direction:column;width:100%;gap:0;padding-top:6px}
+  .nav.open ul{display:flex}
+  .nav ul li{width:100%}
+  .nav ul a{display:block;padding:13px 4px;border-top:1px solid rgba(255,255,255,.14)}
+  .nav ul a.btn{display:inline-block;margin:10px 0 4px;padding:11px 22px}
+}
+
 @media(max-width:640px){
   .hero h1{font-size:2.1rem}
-  .nav ul{gap:12px}
+  .hero .wrap{padding:52px 20px 62px}
+  .carousel .slides img{height:260px}
   footer.site .cols{flex-direction:column}
+  .info{gap:14px}
+  section{padding:44px 0}
+  section h2{font-size:1.7rem}
 }
